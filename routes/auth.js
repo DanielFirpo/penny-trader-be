@@ -96,7 +96,7 @@ router.post('/register', (req, res) => {
                                     return
                                 }
                                 var token = jwt.sign({ id: id[0].id}, process.env.JWT_SECRET, {
-                                    expiresIn: 10800 // expires in 3 hours
+                                    expiresIn: 80000 // expires in 20 something hours
                                 });
                                 let isAdmin = false
                                 if(process.env.ADMIN_ACC_USERNAME === req.body.username && process.env.ADMIN_ACC_EMAIL === req.body.email) {
@@ -132,7 +132,7 @@ router.post('/login', (req, res) => {
                 }
                 if (result) {
                     var token = jwt.sign({ id: rows[0].id }, process.env.JWT_SECRET, {
-                        expiresIn: 10800 // expires in 3 hours
+                        expiresIn: 80000 // expires in 3 hours
                     });
                     // Passwords match
                     let isAdmin = false

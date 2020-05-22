@@ -9,9 +9,9 @@ mysqlObj = {
     waitTimeout: 2
 }
 
-var mysqlConnection = mysql.createConnection(mysqlObj)
-
 console.log(mysqlObj)
+
+let connection
 
 function handleDisconnect() {
     connection = mysql.createConnection(mysqlObj);
@@ -37,4 +37,4 @@ function handleDisconnect() {
 
 handleDisconnect();
 
-module.exports = mysqlConnection;
+module.exports = connection;
