@@ -3,7 +3,7 @@ var router = express.Router()
 
 var db = require('../mysqlConfig');
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 // process.env.JWT_SECRET
 var jwt = require('jsonwebtoken');
