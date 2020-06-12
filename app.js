@@ -13,6 +13,7 @@ dotenv.config();
 var auth = require("./routes/auth")
 var admin = require("./routes/admin/admin")
 var products = require("./routes/products")
+var payment = require("./routes/payment")
 
 var cors = require('cors');
 
@@ -54,6 +55,7 @@ app.get('/', (req, res) => res.send('Penny Trader API'))
 app.use("/", auth)
 app.use("/admin", admin)
 app.use("/products", products)
+app.use("/payment", payment)
 
 // error handler
 app.use(function (err, req, res, next) {

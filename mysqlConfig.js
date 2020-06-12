@@ -6,7 +6,9 @@ mysqlObj = {
     password: process.env.MYSQL_PASS,
     database: process.env.MYSQL_DATABASE,
     multipleStatements: true,
-    waitTimeout: 2
+    connectTimeout: 500000,
+    port: process.env.MYSQL_PORT,
+    debug: true
 }
 
 console.log(mysqlObj)
@@ -18,7 +20,11 @@ function handleDisconnect() {
 
     connection.connect(function (err) {
         if (err) {
-            console.log('error when connecting to db:', err);
+            console.log('error when connecting to db:');
+            console.log(err.code);
+            console.log("Fatal: " + err.fatal);
+            console.log(err.sql);
+            console.log(err.sqlMessage);
             setTimeout(handleDisconnect, 2000);
         }
         else {
