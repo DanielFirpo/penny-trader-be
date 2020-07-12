@@ -122,5 +122,129 @@ router.delete('/delete', adminRestricted, (req, res) => {
     })
 })
 
+// get orders, filtered by status (defaults to 0, "placed") and by optional searchTerm
+router.get('/orders', adminRestricted, (req, res) => {
+    //req.query.status
+    //req.query.searchTerm
+    if(req.query.status != 0 && req.query.status != 1 && req.query.status != 2) {
+        req.query.status = 0;
+    }
+    db.query(`SELECT * FROM orders WHERE status = ${req.query.status}`, (err, rows) => {
+        if(err) {
+            console.log("SQL error", err)
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        console.log(rows);
+        return res.status(200).send({message: "Orders delivered successfully.", orders: rows});
+    })
+})
+
+// get order
+router.get('/order', adminRestricted, (req, res) => {
+
+    let order;
+
+    db.query(`SELECT * FROM orders WHERE id = ${req.query.id}`, (err, rows) => {
+        if(err) {
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        order = rows[0];
+        db.query(`SELECT order_items.coinid FROM orders INNER JOIN order_items ON 
+        orders.id=order_items.orderid WHERE orders.id = ${req.query.id}`, (err, rows2) => {
+
+            let coinsQuery = ""
+
+            rows2.forEach(coin => {
+                console.log(coin.coinid)
+                coinsQuery += " OR id = " + coin.coinid;
+            });
+
+            //remove first OR
+            coinsQuery = coinsQuery.substring(4);
+
+
+            console.log(`SELECT * FROM coins WHERE ${coinsQuery}`)
+            db.query(`SELECT * FROM coins WHERE ${coinsQuery}`, (err, rows3) => {
+                console.log(rows3)
+                order.items = rows3;
+                return res.status(200).send({message: "Order delivered successfully.", order: order});
+            })
+        })
+    })
+
+})
+
+router.get('/searchorders', adminRestricted, (req, res) => {
+    //req.query.status
+    //req.query.searchTerm
+    if(req.query.status != 0 && req.query.status != 1 && req.query.status != 2) {
+        req.query.status = 0;
+    }
+    db.query(`SELECT * FROM orders WHERE status = ${req.query.status} AND first_name LIKE '%${req.query.searchTerm}%' 
+    OR last_name LIKE '%${req.query.searchTerm}%' OR address LIKE '%${req.query.searchTerm}%' OR address_2 LIKE '%${req.query.searchTerm}%' 
+    OR city LIKE '%${req.query.searchTerm}%' OR state LIKE '%${req.query.searchTerm}%' OR zip LIKE '%${req.query.searchTerm}%' 
+    OR phone LIKE '%${req.query.searchTerm}%' OR email LIKE '%${req.query.searchTerm}%'`, (err, rows) => {
+        if(err) {
+            console.log("SQL error", err)
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        console.log(rows);
+        return res.status(200).send({message: "Orders delivered successfully.", orders: rows});
+    })
+})
+
+router.put('/orderstatus', adminRestricted, (req, res) => {
+    //req.body.status
+    //req.query.id
+    
+    if(req.body.status != 0 && req.body.status != 1 && req.body.status != 2 || !req.query.id) {
+        return res.status(400).send({ message: "Something went wrong. Please try again.", errors: "Invalid status sent, or no id param" })
+    }
+    db.query(`UPDATE orders SET status = ${req.body.status} WHERE id = ${req.query.id}`, (err, rows) => {
+        if(err) {
+            console.log("SQL error", err)
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        console.log(rows);
+        return res.status(200).send({message: "Orders delivered successfully.", orders: rows});
+    })
+})
+
+
+router.post('/storesettings', adminRestricted, (req, res) => {
+
+    let query = ""
+
+    if (req.body.tax_rate) {
+        query += "tax_rate = " + req.body.tax_rate + (req.body.shipping_fee ? ", " : "");
+    }
+
+    if (req.body.shipping_fee) {
+        query += "shipping_fee = " + req.body.shipping_fee;
+    }
+
+    if(!req.body.tax_rate && !req.body.shipping_fee) {
+        console.log("here")
+        return res.status(400).send({ message: "Something went wrong. Please try again." })
+    }
+
+    console.log(`UPDATE store_settings SET ${query}`)
+    db.query(`UPDATE store_settings SET ${query}`, (err, rows) => {
+        if (err) {
+            console.log("sql")
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        return res.status(200).send({ message: "Successfully updated store settings." });
+    })
+})
+
+router.get('/storesettings', (req, res) => {
+    db.query('SELECT * FROM store_settings', (err, rows) => {
+        if (err) {
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        return res.status(200).send({...rows[0]});
+    })
+})
 
 module.exports = router
