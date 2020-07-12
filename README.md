@@ -1,2 +1,2 @@
 # penny-trader-be
- Buy, sell, and trade rare coins!
+An ecommerce site specializing in selling rare coins! Built with React, Express, PayPal SDK, and MySQL. 
