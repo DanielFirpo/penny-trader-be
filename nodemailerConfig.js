@@ -1,12 +1,14 @@
 const nodemailer = require('nodemailer');
 
 let transport = nodemailer.createTransport({
-    host: 'email-smtp.us-east-1.amazonaws.com',
-    port: 25,
+    host: 'smtp.mail.us-east-1.awsapps.com',
+    port: 465,
     auth: {
        user: process.env.EMAIL_USERNAME,
        pass: process.env.EMAIL_PASS
-    }
+    },
+    requireTLS: true,
+    secure: true
 });
 
 module.exports = function sendEmail(to, subject, html) {
@@ -14,7 +16,8 @@ module.exports = function sendEmail(to, subject, html) {
     const message = {
         to: to,
         subject: subject,
-        html: html
+        html: html,
+        from: process.env.EMAIL_USERNAME
 
     };
     

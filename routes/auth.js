@@ -111,7 +111,7 @@ router.post('/register', (req, res) => {
                                     isAdmin = true
                                 }
                                 res.status(201).send({ message: "Account Created Successfully", token: token, administrator: isAdmin });
-                                sendEmail(req.body.email, `Hi ${req.body.username}, please verify your Willy's Penny Co account.`, createVerifyEmail(req.body.username, verifyHash))
+                                sendEmail(req.body.email, `Hi ${req.body.username}, please verify your Ultimate Penny Trader account.`, createVerifyEmail(req.body.username, verifyHash))
                                 return
                             })
 
