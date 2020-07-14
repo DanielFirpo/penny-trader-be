@@ -15,6 +15,7 @@ module.exports = function sendEmail(to, subject, html) {
         to: to,
         subject: subject,
         html: html
+        
     };
     
 
