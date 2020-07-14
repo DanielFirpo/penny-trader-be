@@ -149,7 +149,8 @@ router.get('/adminsearch', adminRestricted, (req, res) => {
                 filter.maxYear = 100000;//something big so if they don't specificy upper bounds it will include all
             }
 
-            if (!filter.status) {
+            if (filter.status == undefined) {
+                console.log("no filter sent")
                 filter.status = 1;//listed
             }
 
