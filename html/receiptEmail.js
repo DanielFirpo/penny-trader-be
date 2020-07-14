@@ -22,7 +22,7 @@
 
 module.exports = function createReceiptEmail(firstName, items, taxAndShipping, total) {
 
-    var receiptEmailHeader = `<link href=\"https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap\" rel=\"stylesheet\"><div style=\"margin: auto; padding: 50px; max-width: 670px;\"><h1 style="font-family: 'Nunito Sans', sans-serif; color: black;">Hi ${firstName},</h1><p style=\"font-size: 16px; color: #51545E; font-family: \'Nunito Sans\', sans-serif; margin-bottom: 50px;\">Thanks for purchasing from Willy\'s Penny Co. This email is the confirmation of your purchase. No payment is due.</p><div style=\"display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid  #eaeaec;\"><div style=\"color: #85878E; font-size: 12px; font-weight: bold;\">Description</div><div style=\"color: #85878E; font-size: 12px; font-weight: bold; margin-left: auto;\">Amount</div></div>`
+    var receiptEmailHeader = `<link href=\"https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap\" rel=\"stylesheet\"><div style=\"margin: auto; padding: 50px; max-width: 670px;\"><h1 style="font-family: 'Nunito Sans', sans-serif; color: black;">Hi ${firstName},</h1><p style=\"font-size: 16px; color: #51545E; font-family: \'Nunito Sans\', sans-serif; margin-bottom: 50px;\">Thanks for purchasing from Ultimate Penny Trader. This email is the confirmation of your purchase. No payment is due.</p><div style=\"display: flex; justify-content: space-between; padding-bottom: 10px; border-bottom: 2px solid  #eaeaec;\"><div style=\"color: #85878E; font-size: 12px; font-weight: bold;\">Description</div><div style=\"color: #85878E; font-size: 12px; font-weight: bold; margin-left: auto;\">Amount</div></div>`
 
     let receiptEmailItems = ""
 

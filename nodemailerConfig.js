@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 let transport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
+    host: 'email-smtp.us-east-1.amazonaws.com',
     port: 587,
     auth: {
        user: process.env.EMAIL_USERNAME,
