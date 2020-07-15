@@ -46,7 +46,7 @@ module.exports = function createReceiptEmail(firstName, items, taxAndShipping, t
     </div>
 `
 
-    var receiptEmailFooter = `<div style=\"display: flex; padding-bottom: 10px; padding-top: 10px;\"><div style=\"margin-left: auto; margin-right: 20px; color: black; font-size: 12px; font-weight: bold;\">Total</div><div style=\"color: black; font-size: 12px; font-weight: bold;\">$${total}</div></div><p style=\"font-size: 16px; color: #51545E; font-family: 'Nunito Sans', sans-serif; margin-top: 50px;\">If you have any questions about this receipt or need help with your order, please email support@willco.com for help.</p></div>`
+    var receiptEmailFooter = `<div style=\"display: flex; padding-bottom: 10px; padding-top: 10px;\"><div style=\"margin-left: auto; margin-right: 20px; color: black; font-size: 12px; font-weight: bold;\">Total</div><div style=\"color: black; font-size: 12px; font-weight: bold;\">$${total}</div></div><p style=\"font-size: 16px; color: #51545E; font-family: 'Nunito Sans', sans-serif; margin-top: 50px;\">If you have any questions about this receipt or need help with your order, please email support@ultimatepennytrader.com for help.</p></div>`
 
     return receiptEmailHeader + receiptEmailItems + receiptEmailFooter;
 

@@ -98,7 +98,7 @@ router.get('/search', (req, res) => {
     }
 
     db.query(
-        `SELECT * FROM coins WHERE (name LIKE '%${filter.searchTerm}%' OR image_name LIKE '%${filter.searchTerm}%' 
+        `SELECT * FROM coins WHERE (name LIKE '%${filter.searchTerm}%' 
     OR year LIKE '%${filter.searchTerm}%' OR description LIKE '%${filter.searchTerm}%') AND status = 1
     AND year >= ${filter.minYear} AND year <= ${filter.maxYear} AND price >= ${filter.minPrice * 100} AND price <= ${filter.maxPrice * 100}
     LIMIT ${req.query.pageNumber * amountPerPage}, ${req.query.pageNumber * amountPerPage + amountPerPage}`, (err, rows) => {
@@ -168,7 +168,7 @@ router.get('/adminsearch', adminRestricted, (req, res) => {
     }
 
     db.query(
-        `SELECT * FROM coins WHERE (name LIKE '%${filter.searchTerm}%' OR image_name LIKE '%${filter.searchTerm}%' 
+        `SELECT * FROM coins WHERE (name LIKE '%${filter.searchTerm}%' 
     OR year LIKE '%${filter.searchTerm}%' OR description LIKE '%${filter.searchTerm}%') AND status = ${filter.status}
     AND year >= ${filter.minYear} AND year <= ${filter.maxYear} AND price >= ${filter.minPrice * 100} AND price <= ${filter.maxPrice * 100}
     LIMIT ${req.query.pageNumber * amountPerPage}, ${req.query.pageNumber * amountPerPage + amountPerPage}`, (err, rows) => {
