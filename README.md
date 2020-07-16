@@ -1,3 +1,5 @@
+![](https://raw.githubusercontent.com/DanielFirpo/penny-trader-fe/master/Capture.PNG)
+
 # Ultimate Penny Trader Backend
 [UltimatePennyTrader.com](https://www.ultimatepennytrader.com/)
 
