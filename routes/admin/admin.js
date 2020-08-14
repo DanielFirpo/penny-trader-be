@@ -32,7 +32,7 @@ router.post('/add', adminRestricted, (req, res) => {
         if (!req.body) {
             return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["no data sent"] })
         }
-        if (!req.body.name || !req.body.year || !req.body.price || !req.body.status) {
+        if (!req.body.name || !req.body.year || !req.body.price || !req.body.status || !req.body.rating || !req.body.manufacturer) {
             return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["data sent but missing an item"] })
         }
         if (req.body.status != 0 && req.body.status != 1 && req.body.status != 2) {
@@ -40,12 +40,14 @@ router.post('/add', adminRestricted, (req, res) => {
         }
         let filename = "no-image.png"
         if (req.file) {
+            console.log(req.file)
+            console.log(JSON.stringify(req.file))
             filename = req.file.location;
         }
         if (!req.body.description) {
             req.body.description = ""
         }
-        db.query(`INSERT INTO coins (name, image_name, year, price, description, status) VALUES ('${req.body.name}', '${filename}', ${req.body.year}, ${req.body.price * 100}, '${req.body.description}', ${parseInt(req.body.status)})`, (err, rows) => {
+        db.query(`INSERT INTO coins (name, image_name, year, price, description, status, rating, manufacturer) VALUES ('${req.body.name}', '${filename}', ${req.body.year}, ${req.body.price * 100}, '${req.body.description}', ${parseInt(req.body.status)}, ${parseInt(req.body.rating)}, ${parseInt(req.body.manufacturer)})`, (err, rows) => {
             if (err) {
                 console.log("SQL Error", err)
                 return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
@@ -95,6 +97,8 @@ router.post('/edit', adminRestricted, (req, res) => {
         valuesToUpdate += `, description = ''`
     }
     valuesToUpdate += `, status = ${req.body.status}`
+    valuesToUpdate += `, rating = ${req.body.rating}`
+    valuesToUpdate += `, manufacturer = ${req.body.manufacturer}`
 
     db.query(`UPDATE coins SET ${valuesToUpdate} WHERE id = ${req.body.id}`, (err, rows) => {
         if (err) {
