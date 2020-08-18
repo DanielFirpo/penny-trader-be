@@ -30,9 +30,11 @@ router.post('/add', adminRestricted, (req, res) => {
         // }
 
         if (!req.body) {
+            console.log("no body")
             return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["no data sent"] })
         }
         if (!req.body.name || !req.body.year || !req.body.price || !req.body.status || !req.body.rating || !req.body.manufacturer) {
+            console.log("no rating or manu")
             return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["data sent but missing an item"] })
         }
         if (req.body.status != 0 && req.body.status != 1 && req.body.status != 2) {
