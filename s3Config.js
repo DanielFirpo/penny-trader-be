@@ -21,8 +21,14 @@ const fileFilter = (req, file, cb) => {
 
 const s3 = new aws.S3();
 
+var limits = {
+  files: 1, // allow only 1 file per request
+  fileSize: 50 * 1024 * 1024, // (replace MBs allowed with your desires)
+};
+
 const upload = multer({
     fileFilter,
+    limits: limits,
     storage: multerS3({
       acl: 'public-read',
       s3,
