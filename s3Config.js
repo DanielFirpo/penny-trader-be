@@ -31,9 +31,9 @@ const upload = multer({
     //     cb(null, {fieldName: 'TESTING_METADATA'});
     //   },
       key: function (req, file, cb) {
-        cb(null, Date.now().toString() + path.extname(file.originalname))
+        cb(null, Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + "_" + Date.now().toString() + path.extname(file.originalname))
       }
     })
-  });
+  }).array('images', 2);
 
 module.exports = upload;
