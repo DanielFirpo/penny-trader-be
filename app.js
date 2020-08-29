@@ -29,8 +29,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(bodyParser())
-app.use(bodyParser.json({limit:'20mb'})); 
-app.use(bodyParser.urlencoded({extended:true, limit:'20mb'}));
+app.use(bodyParser.json({limit:'200000mb'})); 
+app.use(bodyParser.urlencoded({extended:true, limit:'200000mb'}));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // // catch 404 and forward to error handler
