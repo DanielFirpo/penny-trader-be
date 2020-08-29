@@ -23,7 +23,7 @@ const s3 = new aws.S3();
 
 var limits = {
   files: 2, // allow only 1 file per request
-  fileSize: 5000 * 1024 * 1024, // (replace MBs allowed with your desires)
+  fileSize: 500000000 * 1024 * 1024, // (replace MBs allowed with your desires)
 };
 
 const upload = multer({
