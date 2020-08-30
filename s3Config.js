@@ -21,14 +21,14 @@ const fileFilter = (req, file, cb) => {
 
 const s3 = new aws.S3();
 
-var limits = {
-  files: 2, // allow only 1 file per request
-  fileSize: 500000000 * 1024 * 1024, // (replace MBs allowed with your desires)
-};
+// var limits = {
+//   files: 2, // allow only 1 file per request
+//   fileSize: 500000000 * 1024 * 1024, // (replace MBs allowed with your desires)
+// };
 
 const upload = multer({
     fileFilter,
-    limits: limits,
+    // limits: limits,
     storage: multerS3({
       acl: 'public-read',
       s3,
@@ -40,6 +40,6 @@ const upload = multer({
         cb(null, Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + Math.floor(Math.random()*9).toString() + "_" + Date.now().toString() + path.extname(file.originalname))
       }
     })
-  }).array('images', 2);
+  }).single('image');
 
 module.exports = upload;

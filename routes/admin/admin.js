@@ -7,68 +7,98 @@ var db = require('../../mysqlConfig');
 
 var s3Upload = require('../../s3Config');
 
+const multer = require("multer");
+
 // filename: function(req, file, cb){
 //     cb(null,"coin-" + Date.now() + "-" + path.basename(file.originalname, path.extname(file.originalname)) + path.extname(file.originalname));
 //  }
 
-router.post('/add', adminRestricted, (req, res) => {
+let files = [];
 
+router.post('/uploadimage', adminRestricted, (req, res) => {
     s3Upload(req, res, function (err) {
-        console.log("files:")
-        console.log(JSON.stringify(req.images));
-        let fileArray = req.files,
-            fileLocation;
-        const images = [];
-        for (let i = 0; i < fileArray.length; i++) {
-            fileLocation = fileArray[i].location;
-            console.log('filenm', fileLocation);
-            images.push(fileLocation)
+        if(req.file) {
+            files.push({ front: req.body.front, id: req.body.uploadID, file: req.file })
+            console.log("File recieved: " + JSON.stringify({ front: req.body.front, id: req.body.uploadID, file: req.file }))
+            return res.status(200).send({ message: "File recieved successfully." });
         }
-        console.log("images")
-        console.log(JSON.stringify(images))
+        return res.status(200).send({ message: "No file." });
+    })
+})
 
-        if (err) {
-            console.log(err)
-            return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["s3 error"] })
-        }
-        //req.body.data format:
-        // {
-        //     name: "name",
-        //     image_name: "image name",
-        //     year: 1990,
-        //     price: 10000,
-        //     description: "desc"
-        // }
+router.post('/add', adminRestricted, multer().fields([]), (req, res) => {
 
-        if (!req.body) {
-            console.log("no body")
-            return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["no data sent"] })
-        }
-        if (!req.body.name || !req.body.year || !req.body.price || !req.body.status || !req.body.rating || !req.body.manufacturer) {
-            console.log("no rating or manu")
-            return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["data sent but missing an item"] })
-        }
-        if (req.body.status != 0 && req.body.status != 1 && req.body.status != 2) {
-            req.body.status = 0;
-        }
-        let frontFilename = "no-image.png"
-        if (images[0]) {
-            frontFilename = images[0];
-        }
-        let backFilename = "no-image.png"
-        if (images[1]) {
-            backFilename = images[1];
-        }
-        if (!req.body.description) {
-            req.body.description = ""
-        }
-        db.query(`INSERT INTO coins (name, front_image_name, back_image_name, year, price, description, status, rating, manufacturer) VALUES ('${req.body.name}', '${frontFilename}', '${backFilename}', ${req.body.year}, ${req.body.price * 100}, '${req.body.description}', ${parseInt(req.body.status)}, ${parseInt(req.body.rating)}, ${parseInt(req.body.manufacturer)})`, (err, rows) => {
-            if (err) {
-                console.log("SQL Error", err)
-                return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+    // console.log("files:")
+    // console.log(JSON.stringify(req.images));
+    // let fileArray = req.files,
+    //     fileLocation;
+    // const images = [];
+    // for (let i = 0; i < fileArray.length; i++) {
+    //     fileLocation = fileArray[i].location;
+    //     console.log('filenm', fileLocation);
+    //     images.push(fileLocation)
+    // }
+    // console.log("images")
+    // console.log(JSON.stringify(images))
+
+    // if (err) {
+    //     console.log(err)
+    //     return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["s3 error"] })
+    // }
+    //req.body.data format:
+    // {
+    //     name: "name",
+    //     image_name: "image name",
+    //     year: 1990,
+    //     price: 10000,
+    //     description: "desc"
+    // }
+
+    if (!req.body) {
+        console.log("no body")
+        return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["no data sent"] })
+    }
+    console.log(req.body)
+    if (!req.body.name || !req.body.year || !req.body.price || !req.body.status || !req.body.rating || !req.body.manufacturer) {
+        console.log(req.body.name + " " + !req.body.year  + " " +  !req.body.price  + " " +  !req.body.status  + " " +  !req.body.rating  + " " +  !req.body.manufacturer)
+        return res.status(400).send({ message: "Something went wrong. Make sure you filled out every form field.", errors: ["data sent but missing an item"] })
+    }
+    if (req.body.status != 0 && req.body.status != 1 && req.body.status != 2) {
+        req.body.status = 0;
+    }
+
+    let frontFilename = "no-image.png"
+    let backFilename = "no-image.png"
+    files.forEach(file => {
+        if(file.uploadID === req.body.uploadID){
+            if(file.front) {
+                console.log("front file " + JSON.stringify(file.file))
+                frontFilename = file.file.filename;
             }
-            return res.status(200).send({ message: "Added product successfully." });
-        })
+            else if (!file.front) {
+                console.log("back file " + JSON.stringify(file.file))
+                backFilename = file.file.filename;
+            }
+        }
+    });
+
+    // let frontFilename = "no-image.png"
+    // if (images[0]) {
+    //     frontFilename = images[0];
+    // }
+    // let backFilename = "no-image.png"
+    // if (images[1]) {
+    //     backFilename = images[1];
+    // }
+    if (!req.body.description) {
+        req.body.description = ""
+    }
+    db.query(`INSERT INTO coins (name, front_image_name, back_image_name, year, price, description, status, rating, manufacturer) VALUES ('${req.body.name}', '${frontFilename}', '${backFilename}', ${req.body.year}, ${req.body.price * 100}, '${req.body.description}', ${parseInt(req.body.status)}, ${parseInt(req.body.rating)}, ${parseInt(req.body.manufacturer)})`, (err, rows) => {
+        if (err) {
+            console.log("SQL Error", err)
+            return res.status(400).send({ message: "Something went wrong. Please try again.", errors: err })
+        }
+        return res.status(200).send({ message: "Added product successfully." });
     })
 })
 
