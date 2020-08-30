@@ -71,13 +71,15 @@ router.post('/add', adminRestricted, multer().fields([]), (req, res) => {
     let backFilename = "no-image.png"
     files.forEach(file => {
         if(file.uploadID === req.body.uploadID){
-            if(file.front) {
+            console.log(file);
+            if(file.front === "true") {
                 console.log("front file " + JSON.stringify(file.file))
-                frontFilename = file.file.filename;
+
+                frontFilename = file.file.location;
             }
-            else if (!file.front) {
+            else if (file.front === "false") {
                 console.log("back file " + JSON.stringify(file.file))
-                backFilename = file.file.filename;
+                backFilename = file.file.location;
             }
         }
     });
